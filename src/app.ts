@@ -19,14 +19,6 @@ import dbConfig from "./db";
 import { JokeRepository } from "./repositories/Joke.repository";
 
 useContainer(Container);
-export const AppDataSource = new DataSource(dbConfig);
-console.log("Entrando");
-try {
-  AppDataSource.initialize();
-  console.log("connection to postgrest-sql success");
-} catch (error) {
-  console.log(error);
-}
 
 const app: Express = createExpressServer({
   controllers: [HomeController, JokeController],
@@ -39,7 +31,6 @@ Container.set(Client, clientElastic);
 
 // Inyectar el repository de ElasticSearch en el contenedor de dependencias
 Container.set(ElasticRepository, new ElasticRepository(clientElastic));
-Container.set(JokeRepository, new JokeRepository(AppDataSource));
 
 const storage = getMetadataArgsStorage();
 const spec = routingControllersToSpec(
@@ -81,6 +72,27 @@ app.get("/", (_req, res) => {
   res.json(spec);
 });
 
+console.log({ dbConfig });
+const AppDataSource = new DataSource({
+  type: "postgres",
+  host: "172.21.0.3",
+  port: 5432,
+  username: "postgres",
+  password: "postgres",
+  database: "postgres",
+  logging: true,
+  synchronize: true,
+  entities: [
+    "/src/models/*.{ts,js}",
+  ],
+});
+AppDataSource.initialize()
+  .then(() => {
+    console.log("Data Source has been initialized!");
+  })
+  .catch((err) => {
+    console.error("Error during Data Source initialization", err);
+  });
 // Inicia el servidor en el puerto 3001
 app.listen(config.app.port, () => {
   console.log(
