@@ -1,10 +1,22 @@
-import { Get, JsonController, Param, Post } from "routing-controllers";
+import {
+  Delete,
+  Get,
+  JsonController,
+  Param,
+  Post,
+  Put,
+} from "routing-controllers";
 import { JokesService } from "../../services/Jokes.service";
 import { ESource } from "../../interfaces/jokes.interface";
 import { OpenAPI } from "routing-controllers-openapi";
 import { OptionalParam } from "../../pipes/optional-param";
 import { Inject, Service } from "typedi";
-import { GetJokesDoc } from "../../doc/endpoints-jokes";
+import {
+  DeleteJokesDoc,
+  GetJokesDoc,
+  PostCreateJokesDoc,
+  UpdateJokesDoc,
+} from "../../doc/endpoints-jokes";
 
 @Service()
 @JsonController("jokes")
@@ -24,8 +36,20 @@ export class JokeController {
   }
 
   @Post("/:joke")
-  @OpenAPI(GetJokesDoc)
+  @OpenAPI(PostCreateJokesDoc)
   create(@Param("joke") joke: string) {
     return this.jokesService.create(joke);
+  }
+
+  @Put("/:id")
+  @OpenAPI(UpdateJokesDoc)
+  update(@Param("id") id: string) {
+    return this.jokesService.update(id);
+  }
+
+  @Delete("/:delete")
+  @OpenAPI(DeleteJokesDoc)
+  delete(@Param("id") id: string) {
+    return this.jokesService.delete(id);
   }
 }

@@ -12,15 +12,15 @@ export const config = {
     dad: String(process.env.URL_DAD_API),
   },
   db: {
-    type: process.env.DB_TYPE || "sqlite",
-    host: process.env.DB_HOST,
+    type: String(process.env.DB_TYPE),
+    host: String(process.env.DB_HOST),
     port: Number(process.env.DB_PORT),
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    logging: process.env.DB_LOGGING === "true",
-    synchronize: process.env.DB_SYNCHRONIZE === "true",
-    migrationsRun: process.env.DB_MIGRATIONS_RUN === "true",
+    username: String(process.env.DB_USERNAME),
+    password: String(process.env.DB_PASSWORD),
+    database: String(process.env.DB_DATABASE),
+    logging: Boolean(process.env.DB_LOGGING),
+    synchronize: Boolean(process.env.DB_SYNCHRONIZE),
+    migrations: [String(process.env.DB_MIGRATIONS_RUN)],
   },
 };
 

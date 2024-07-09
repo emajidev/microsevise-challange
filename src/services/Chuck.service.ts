@@ -16,7 +16,7 @@ export class ChuckApiService {
 
   async getData(): Promise<IChuckData> {
     try {
-      return await this.externalApiService.get("/", );
+      return await this.externalApiService.get("/");
     } catch (error) {
       throw new HttpError(500, error);
     }

@@ -1,20 +1,19 @@
-import { Inject, Service } from "typedi";
+import { Service } from "typedi";
 import { BaseService } from "../common/services/Base.service";
 import { ESource, IJoke } from "../interfaces/jokes.interface";
 import { ChuckApiService } from "./Chuck.service";
 import { DadApiService } from "./Dad.service";
 import { TransformDataChuckJokeDto } from "../dtos/transformDataChukDTO";
 import { TransformDataDadJokeDto } from "../dtos/transformDataDadDTO";
-import { HttpError } from "../common/errors/httpErrors";
+import { JokeRepository } from "../repositories/Joke.repository";
 
 @Service()
 export class JokesService extends BaseService {
-  //@OrmRepository()
-
   constructor(
     private readonly chuckService: ChuckApiService,
     private readonly DadService: DadApiService
-  ) {
+  ) //private readonly jokeRepository: JokeRepository
+  {
     super();
   }
 
@@ -23,7 +22,7 @@ export class JokesService extends BaseService {
   }
 
   async create(joke: string) {
-    throw new Error("Method not implemented.");
+    //return await this.jokeRepository.find();
   }
 
   async update(joke: string) {

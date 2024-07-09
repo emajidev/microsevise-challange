@@ -12,10 +12,21 @@ import { HomeController } from "./controllers/v1/Home.controller";
 import { JokeController } from "./controllers/v1/Jokes.controller";
 import config from "./config";
 import clientElastic from "./connections/elasticsearch.client";
-import { ElasticRepository } from "./repositories/elasticsearch.repository";
+import { ElasticRepository } from "./repositories/Elasticsearch.repository";
 import { Client } from "@elastic/elasticsearch";
+import { DataSource, DataSourceOptions, createConnection } from "typeorm";
+import dbConfig from "./db";
+import { JokeRepository } from "./repositories/Joke.repository";
 
 useContainer(Container);
+export const AppDataSource = new DataSource(dbConfig);
+console.log("Entrando");
+try {
+  AppDataSource.initialize();
+  console.log("connection to postgrest-sql success");
+} catch (error) {
+  console.log(error);
+}
 
 const app: Express = createExpressServer({
   controllers: [HomeController, JokeController],
@@ -25,8 +36,10 @@ const app: Express = createExpressServer({
 
 // Registrar el cliente de ElasticSearch en el contenedor de dependencias
 Container.set(Client, clientElastic);
+
 // Inyectar el repository de ElasticSearch en el contenedor de dependencias
 Container.set(ElasticRepository, new ElasticRepository(clientElastic));
+Container.set(JokeRepository, new JokeRepository(AppDataSource));
 
 const storage = getMetadataArgsStorage();
 const spec = routingControllersToSpec(
