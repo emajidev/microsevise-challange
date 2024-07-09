@@ -133,6 +133,19 @@ export const UpdateJokesDoc: OpenAPIParam = {
       description: "Update joke by id",
     },
   ],
+  requestBody: {
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            value: { type: "string", description: "The joke text" },
+            url: { type: "string", description: "The url joke" },
+          },
+        },
+      },
+    },
+  },
   responses: {
     "200": {
       description: "Éxito",
@@ -180,7 +193,7 @@ export const UpdateJokesDoc: OpenAPIParam = {
 };
 
 export const DeleteJokesDoc: OpenAPIParam = {
-  description: "Update joke by",
+  description: "Delete joke by",
   parameters: [
     {
       in: "path",

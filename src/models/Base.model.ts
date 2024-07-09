@@ -9,14 +9,14 @@ export abstract class BaseModel {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ default: new Date() })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ default: new Date() })
   updatedAt: Date;
 
   @DeleteDateColumn()
-  deletedAt: Date;
+  deletedAt?: Date;
 
   toPromise(): Promise<any> {
     return Promise.resolve(this);

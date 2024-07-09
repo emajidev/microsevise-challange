@@ -7,18 +7,18 @@ export class JokeModel extends BaseModel {
   @Column()
   value: string;
 
-  @Column()
+  @Column("char", { array: true, default: [""] })
   categories?: string[];
 
-  @Column()
+  @Column({ default: "" })
   iconUrl?: string;
 
-  @Column()
+  @Column({ default: "" })
   url?: string;
 
-  @Column()
+  @Column({ default: 200 })
   status?: number;
 
-  @Column()
+  @Column({ default: "internal" })
   source: ESource;
 }

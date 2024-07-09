@@ -5,16 +5,22 @@ import { ChuckApiService } from "./Chuck.service";
 import { DadApiService } from "./Dad.service";
 import { TransformDataChuckJokeDto } from "../dtos/transformDataChukDTO";
 import { TransformDataDadJokeDto } from "../dtos/transformDataDadDTO";
-import { JokeRepository } from "../repositories/Joke.repository";
+import { AppDataSource } from "../app";
+import { JokeModel } from "../models/Joke.model";
+import { Repository } from "typeorm";
+import { UpdateJokeDTO } from "../dtos/UpdateJokeDTO";
+const HttpExecption = require("http-errors");
 
 @Service()
 export class JokesService extends BaseService {
+  private repositoryJoke: Repository<JokeModel>;
+
   constructor(
     private readonly chuckService: ChuckApiService,
     private readonly DadService: DadApiService
-  ) //private readonly jokeRepository: JokeRepository
-  {
+  ) {
     super();
+    this.repositoryJoke = AppDataSource.getRepository(JokeModel);
   }
 
   async getJoke(source: any | null): Promise<IJoke> {
@@ -22,18 +28,39 @@ export class JokesService extends BaseService {
   }
 
   async create(joke: string) {
-    //return await this.jokeRepository.find();
+    await this.validateExistJoke(joke);
+    return await this.repositoryJoke.save({
+      value: joke,
+    });
   }
 
-  async update(joke: string) {
-    throw new Error("Method not implemented.");
+  async update(id: string, body: UpdateJokeDTO) {
+    if (body?.value) {
+      await this.validateExistJoke(body?.value);
+    }
+    return await this.repositoryJoke.update({ id }, body);
   }
 
-  async delete(joke: string) {
-    throw new Error("Method not implemented.");
+  async delete(id: string) {
+    try {
+      await this.repositoryJoke.delete({ id });
+      const findJoke = await this.repositoryJoke.findOneBy({ id });
+      if (!findJoke) {
+        return { message: `The joke was delete successfully` };
+      }
+    } catch (error) {
+      throw new HttpExecption(500, error);
+    }
   }
 
   // private methods
+  private async validateExistJoke(joke: string) {
+    const findJoke = await this.repositoryJoke.findOneBy({ value: joke });
+    if (findJoke) {
+      throw new HttpExecption(403, `This Jocke exits`);
+    }
+  }
+
   private async actionBySource(source) {
     if (!source) {
       source = this.getRandomSourceValue();
@@ -42,11 +69,8 @@ export class JokesService extends BaseService {
       [ESource.Chuck]: await this.callDataChuck(),
       [ESource.Dad]: await this.callDataDad(),
     };
-
     const data = actions[source];
     return data;
-
-    // Random joke
   }
 
   private async callDataChuck() {

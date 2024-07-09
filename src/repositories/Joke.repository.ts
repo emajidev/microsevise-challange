@@ -2,10 +2,6 @@
 import { DataSource, Repository } from "typeorm";
 import { JokeModel } from "../models/Joke.model";
 import { Service } from "typedi";
+import { AppDataSource } from "../app";
 
-@Service()
-export class JokeRepository extends Repository<JokeModel> {
-  constructor(dataSource: DataSource) {
-    super(JokeModel, dataSource.createEntityManager());
-  }
-}
+export const jokeRepository = AppDataSource.getRepository(JokeModel);

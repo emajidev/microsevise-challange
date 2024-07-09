@@ -1,9 +1,9 @@
 export enum ESource {
-  Chuck = 'Chuck',
-  Dad = 'Dad',
+  Chuck = "Chuck",
+  Dad = "Dad",
 }
 export interface IJoke {
-  id: string;
+  id?: string;
   value: string;
   categories?: string[];
   createdAt?: string;
@@ -11,5 +11,5 @@ export interface IJoke {
   updatedAt?: string;
   url?: string;
   status?: number;
-  source: ESource;
+  source: ESource | "internal";
 }

@@ -11,11 +11,11 @@ export default {
   logging: config.db.logging,
   synchronize: config.db.synchronize,
   entities: [`${__dirname}/models/*.{ts,js}`],
-  migrations: [`${__dirname}/migrations/*.{ts,js}`],
-  subscribers: [`${__dirname}/subscribers/*.{ts,js}`],
-  cli: {
-    entitiesDir: "src/models",
-    migrationsDir: "src/migrations",
-    subscribersDir: "src/subscribers",
-  },
+  // migrations: [`${__dirname}/migrations/*.{ts,js}`],
+  // subscribers: [`${__dirname}/subscribers/*.{ts,js}`],
+  // cli: {
+  //   entitiesDir: "src/models",
+  //   migrationsDir: "src/migrations",
+  //   subscribersDir: "src/subscribers",
+  // },
 };
